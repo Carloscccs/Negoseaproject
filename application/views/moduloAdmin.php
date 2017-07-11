@@ -88,7 +88,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </div>
                                 <div class="col s4">
                                     <label>Provincia</label>
-                                    <select class="browser-default">
+                                    <select class="browser-default" id="selectProvincia">
                                         <option value="0" selected>Provincia x</option>
                                     </select>
 
@@ -178,7 +178,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 $('ul.tabs').tabs();
                 cargarSesion();
                 cargarNegocios();
-
+                cargarRegiones();
                 function cargarSesion() {
                     var url = "<?php echo site_url(); ?>/getUs";
                     $("#NombreUsuario").empty();
@@ -206,15 +206,33 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 }
 
                 function cargarRegiones() {
-                    var url = "<?php echo site_url(); ?>" / getReg;
+                    var url = "<?php echo site_url(); ?>/getRegi";
                     $("#selectRegion").empty();
                     $.getJSON(url, function (res) {
                         $.each(res, function (i, o) {
-                            var x = "<option value='" + o.id + "' >" + o.nombre + "</option>";
+                            var x = "<option value='" + o.id + "'>" + o.nombre + "</option>";
                             $("#selectRegion").append(x);
                         });
                     });
                 }
+
+                $("#selectRegion").change(function () {
+                    var id = $("#selectRegion").val();
+                    $.ajax({
+                        url: "<?php echo site_url(); ?>/getProvi",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {"id": id}
+                    }).success(function (obj) {
+                        $("#selectProvincia").empty();
+                        $.each(obj, function (i, o) {
+                            var x = "<option value='" + o.id + "'>" + o.nombre + "</option>";
+                            $("#selectProvincia").append(x);
+                        });
+                    });
+                })
+
+
             });
         </script>
 

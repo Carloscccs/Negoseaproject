@@ -35,13 +35,20 @@ class gestionModel extends CI_Model {
     function getNegocios() {
         $this->db->select("idNegocio, Nombre, horarioAtencion, tipoNegocio, latitud, longitud, rutUsuario");
         $this->db->from("Negocio");
-        $this->db->get()->result();
+        return $this->db->get()->result();
     }
 
     function getRegiones() {
-        $this->db->select("*");
-        $this->db->from("Region");
-        $this->db->get()->result();
+       // $this->db->select("*");
+        //$this->db->from("Region");
+        return $this->db->get("Region")->result();
+    }
+    
+    function getProvincias($id){
+        $this->db->select("id,nombre");
+        $this->db->from("Provincia");
+        $this->db->where("idRegion", $id);
+        return $this->db->get()->result();
     }
 
 }

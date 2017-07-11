@@ -57,3 +57,4 @@ $route['madmin'] = 'welcome/admin';
 $route['getUs'] = 'welcome/getUsuario';
 $route['getNeg'] = 'welcome/getNegocios';
 $route['getRegi'] = 'welcome/getRegiones';
+$route['getProvi'] = 'welcome/getProvincias';

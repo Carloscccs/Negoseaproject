@@ -14,7 +14,12 @@ class Welcome extends CI_Controller {
     }
 
     public function admin() {
+        if ($this->session->userdata("usuario")) {
             $this->load->view('moduloAdmin');
+        }else{
+            $this->load->view('welcome_message');
+        }
+            
     }
 
     public function validarUsuario() {
@@ -33,5 +38,10 @@ class Welcome extends CI_Controller {
     
     public function getRegiones(){
         echo json_encode($this->gestionModel->getRegiones());
+    }
+    
+    public function getProvincias(){
+        $idRegion = $this->input->post("id");
+        echo json_encode($this->gestionModel->getProvincias($idRegion));
     }
 }
