@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <a id="logo-container" href="#" class="brand-logo"><img src="<?php echo base_url(); ?>img/logo-sin.gif" /></a>
                 <ul class="right hide-on-med-and-down">
                     <li><a href="#modalIniciarSesion">Iniciar sesion</a></li>
-                    <li><a href="#">Registrarse</a></li>
+                    <li><a href="#modalRegistrarse">Registrarse</a></li>
                 </ul>
 
                 <ul id="nav-mobile" class="side-nav">
@@ -83,6 +83,78 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
         </div>
 
+        <div id="modalRegistrarse" class="modal">
+            <div class="modal-content">
+                <div class="row">
+                    <h3>Registro</h3>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="Rut" type="text" class="validate" maxlength="9" placeholder="123456789" required="true">
+                        <label for="Rut">RUT</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="Nombre" type="text" class="validate" required="true">
+                        <label for="Nombre">NOMBRE</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="Apellido" type="text" class="validate">
+                        <label for="Apellido">Apellido</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="Edad" type="number" max="99" min="18" class="validate">
+                        <label for="Edad">EDAD</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="Clave" type="text" class="validate">
+                        <label for="Clave">CLAVE</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="Correo" type="text" class="validate">
+                        <label for="Correo">CORREO</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12">
+                        <label>Region</label>
+                        <select class="browser-default" id="selectRegion">
+                            <option value="" disabled="true" selected>Seleccione</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12">
+                        <label>Provincia</label>
+                        <select class="browser-default" id="selectProvincia">
+                            <option value="" disabled="true" selected>Seleccione</option>
+                        </select>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12">
+                        <label>Comuna</label>
+                        <select class="browser-default" id="selectComuna">
+                            <option value="" disabled="" selected>Seleccione</option>
+                        </select>  
+                    </div>
+                </div>
+                <div class="row">
+                    <input id="btnRegistrarse" type="button" class="waves-effect waves-light btn" value="Registro" />
+                </div>
+            </div>
+        </div>
+
         <footer class="page-footer grey darken-1">
             <div class="container">
                 <div class="row">
@@ -128,7 +200,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <script>
             $(function () {
                 $('.modal').modal();
-
+                cargarRegiones();
                 $("#map").googleMap({
                     zoom: 16, // Initial zoom level (optional)
                     coords: [-35.43606651, -71.62379444], // Map center (optional)
@@ -182,6 +254,54 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         coords: [-35.43611021, -71.62354767], // GPS coords
                         zoom: 16,
                         text: '<h3>Don pepe</h3> <br> TIPO: Verdureria <br> <a href="#" >Click aqui</a>' // HTML content
+                    });
+                });
+
+                function cargarRegiones() {
+                    var url = "<?php echo site_url(); ?>/getRegi";
+                    $("#selectProvincia").prop('disabled', true);
+                    $("#selectComuna").prop('disabled', true);
+                    $.getJSON(url, function (res) {
+                        $.each(res, function (i, o) {
+                            var x = "<option value='" + o.id + "'>" + o.nombre + "</option>";
+                            $("#selectRegion").append(x);
+                        });
+                    });
+                }
+
+                $("#selectRegion").change(function () {
+                    var id = $("#selectRegion").val();
+                    $.ajax({
+                        url: "<?php echo site_url(); ?>/getProvi",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {"id": id}
+                    }).success(function (obj) {
+                        $("#selectProvincia").prop('disabled', false);
+                        $("#selectProvincia").empty();
+                        $("#selectProvincia").append("<option value='' disabled='true' selected >Seleccione</option>");
+                        $.each(obj, function (i, o) {
+                            var x = "<option value='" + o.id + "'>" + o.nombre + "</option>";
+                            $("#selectProvincia").append(x);
+                        });
+                    });
+                });
+
+                $("#selectProvincia").change(function () {
+                    var id = $("#selectProvincia").val();
+                    $.ajax({
+                        url: "<?php echo site_url(); ?>/getComu",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {"id": id}
+                    }).success(function (obj) {
+                        $("#selectComuna").prop('disabled', false);
+                        $("#selectComuna").empty();
+                        $("#selectComuna").append("<option value='' disabled='true' selected >Seleccione</option>");
+                        $.each(obj, function (i, o) {
+                            var x = "<option value='" + o.id + "'>" + o.nombre + "</option>";
+                            $("#selectComuna").append(x);
+                        });
                     });
                 });
             });
