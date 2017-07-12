@@ -72,3 +72,6 @@ $route['aProducto'] = 'welcome/agregarProducto';
 $route['getProduNego'] = 'welcome/getProductosNegocio';
 $route['eProducto'] = 'welcome/eliminarProducto';
 $route['mProducto'] = 'welcome/modificarProducto';
+$route['rUsuario'] = 'welcome/registrarUsuario';
+$route['musu'] = 'welcome/usuario';
+$route['mUsu2'] = 'welcome/modificarUsuario2';

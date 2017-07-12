@@ -22,6 +22,15 @@ class Welcome extends CI_Controller {
             
     }
     
+    public function usuario() {
+        if ($this->session->userdata("usuario")) {
+            $this->load->view('moduloUsuario');
+        }else{
+            $this->load->view('welcome_message');
+        }
+            
+    }
+    
     public function dueño(){
         if ($this->session->userdata("usuario")) {
             $this->load->view('moduloDueno');
@@ -141,5 +150,31 @@ class Welcome extends CI_Controller {
         $tipo = $this->input->post("tipo");
         $estado = $this->input->post("estado");
         echo json_encode($this->gestionModel->modificarProducto($idProducto,$nombre,$precio,$tipo,$estado));
+    }
+    
+    public function registrarUsuario(){
+        $Rut = $this->input->post("Rut");
+        $Nombre = $this->input->post("Nombre");
+        $Apellido = $this->input->post("Apellido");
+        $Edad = $this->input->post("Edad");
+        $Clave = $this->input->post("Clave");
+        $Correo = $this->input->post("Correo");
+        $idRegion = $this->input->post("idRegion");
+        $idProvincia = $this->input->post("idProvincia");
+        $idComuna = $this->input->post("idComuna");
+        echo json_encode($this->gestionModel->registrarUsuario($Rut,$Nombre,$Apellido,$Edad,$Clave,$Correo,$idRegion,$idProvincia,$idComuna));
+    }
+    
+    public function modificarUsuario2(){
+        $Rut = $this->input->post("Rut");
+        $Nombre = $this->input->post("Nombre");
+        $Apellido = $this->input->post("Apellido");
+        $Edad = $this->input->post("Edad");
+        $Clave = $this->input->post("Clave");
+        $Correo = $this->input->post("Correo");
+        $idRegion = $this->input->post("idRegion");
+        $idProvincia = $this->input->post("idProvincia");
+        $idComuna = $this->input->post("idComuna");
+        echo json_encode($this->gestionModel->modificarUsuario2($Rut,$Nombre,$Apellido,$Edad,$Clave,$Correo,$idRegion,$idProvincia,$idComuna));
     }
 }

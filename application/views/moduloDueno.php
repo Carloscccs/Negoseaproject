@@ -142,8 +142,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <input type="text" name="txtMPnombre" id="txtMPnombre" required="true" placeholder=""/>
                 </div>
                 <div class="input-field">
-                    <label for="txtMPprecio">Horario de atencio</label>
-                    <input type="text" name="txtMPprecio" id="txtMPprecio" required="true" placeholder=""/>
+                    <label for="txtMPprecio">Precio</label>
+                    <input type="number" min="0" name="txtMPprecio" id="txtMPprecio" required="true" placeholder=""/>
                 </div>
                 <div class="file-field input-field">
                     <div class="btn">
@@ -334,7 +334,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     var fila = datos.split(",");
                     $("#txtMPid").val(fila[0]);
                     $("#txtMPnombre").val(fila[1]);
-                    $("#txtMPprecio").val(fila[3]);
+                    $("#txtMPprecio").val(fila[2]);
+                    $("#selectMPTipo").val(fila[3]);
                     $("#modalActualizarProducto").modal('open');
                 });
 
@@ -381,7 +382,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     $.ajax({
                         url: "<?php echo site_url(); ?>/cSesion"
                     }).success(function (obj) {
-
+                        window.location = "<?php echo base_url(); ?>";
                     });
                 });
 

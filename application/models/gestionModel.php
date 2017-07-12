@@ -9,7 +9,7 @@ class gestionModel extends CI_Model {
     }
 
     function buscarUsuario($rut) {
-        $this->db->select("Rut,Nombre,Apellido,Rol,Clave");
+        $this->db->select("*");
         $this->db->from("Usuario");
         $this->db->where("Rut", $rut);
         return $this->db->get()->result();
@@ -180,6 +180,34 @@ class gestionModel extends CI_Model {
             $respuesta = "Producto modificado";
         }else{
             $respuesta = "Error al modificar producto";
+        }
+        return $respuesta;
+    }
+    
+    function registrarUsuario($Rut,$Nombre,$Apellido,$Edad,$Clave,$Correo,$idRegion,$idProvincia,$idComuna){
+        $usuarioE = $this->buscarUsuario($Rut);
+        $respuesta = "Error desconocido";
+        if (empty($usuarioE) == false ) {
+            $respuesta = "Rut ya registrado";
+        }else{
+            $datos = array("Rut"=>$Rut,"Nombre"=>$Nombre,"Apellido"=>$Apellido,"Edad"=>$Edad,"Clave"=>$Clave,"Correo"=>$Correo,"idRegion"=>$idRegion,"idProvincia"=>$idProvincia,"idComuna"=>$idComuna,"Rol"=>'Usuario');
+            if($this->db->insert("Usuario",$datos)){
+                $respuesta = "Usuario registrado correctamente";
+            }else{
+                $respuesta = "Error al registrar usuario";
+            }
+        }
+        return $respuesta;
+    }
+    
+    function modificarUsuario2($Rut,$Nombre,$Apellido,$Edad,$Clave,$Correo,$idRegion,$idProvincia,$idComuna){
+        $datos = array("Nombre"=>$Nombre,"Apellido"=>$Apellido,"Edad"=>$Edad,"Clave"=>$Clave,"Correo"=>$Correo,"idRegion"=>$idRegion,"idProvincia"=>$idProvincia,"idComuna"=>$idComuna);
+        $this->db->where("Rut",$Rut);
+        $respuesta = "Error desconocido";
+        if($this->db->update("Usuario",$datos)){
+            $respuesta = "Datos actualizados. Vuelva a iniciar sesion";
+        }else{
+            $respuesta = "Error al actualizar sus datos";
         }
         return $respuesta;
     }

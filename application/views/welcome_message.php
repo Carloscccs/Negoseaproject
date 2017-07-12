@@ -196,7 +196,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
         <script src="<?php echo base_url(); ?>lib/js/materialize.js"></script>
         <script src="<?php echo base_url(); ?>lib/js/init.js"></script>
-        <script src="<?php echo base_url(); ?>lib/js/validarRUT.js"></script>
         <script>
             $(function () {
                 $('.modal').modal();
@@ -213,7 +212,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     if (rut.length == 0 || clave.length == 0) {
                         Materialize.toast("RUT y clave son obligatorios");
                     } else {
-                        if (rut.length <= 8) {
+                        if (rut.length < 8) {
                             Materialize.toast("RUT no valido");
                         } else {
                             $.ajax({
@@ -226,9 +225,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     window.location = "<?php echo site_url(); ?>/madmin";
                                 } else if(obj == "Dueño"){
                                     window.location = "<?php echo site_url(); ?>/mdueno";
+                                }else if(obj == "Usuario"){
+                                    window.location = "<?php echo site_url(); ?>/musu";
                                 }else{
                                     Materialize.toast("Datos incorrecto o usuario no existe");
                                 }
+                                    
+                                
                             }).fail(function (jqXHR, textStatus, errorThrown) {
                                 if (jqXHR.status === 0) {
                                     alert('Not connect: Verify Network.');
@@ -305,6 +308,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             $("#selectComuna").append(x);
                         });
                     });
+                });
+                
+                $("#btnRegistrarse").click(function (){
+                    var Rut = $("#Rut").val();
+                    var Nombre = $("#Nombre").val();
+                    var Apellido = $("#Apellido").val();
+                    var Edad = $("#Edad").val();
+                    var Clave = $("#Clave").val();
+                    var Correo = $("#Correo").val();
+                    var idRegion = $("#selectRegion").val();
+                    var idProvincia = $("#selectProvincia").val();
+                    var idComuna = $("#selectComuna").val();
+                    if(Rut == "" || Nombre == "" || Apellido == "" || Edad == "" || Clave == "" || Correo == "" || idRegion == 0 || idProvincia == 0 || idComuna == 0){
+                        Materialize.toast("Todos los campos son obligatorios");
+                    }else{
+                        $.ajax({
+                            url: "<?php echo site_url();?>/rUsuario",
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {"Rut":Rut,"Nombre":Nombre,"Apellido":Apellido,"Edad":Edad,"Clave":Clave,"Correo":Correo,"idRegion":idRegion,"idProvincia":idProvincia,"idComuna":idComuna}
+                        }).success(function (obj){
+                            Materialize.toast(obj);
+                            $("#modalRegistrarse").modal('close');
+                        });
+                    }
                 });
             });
         </script>
