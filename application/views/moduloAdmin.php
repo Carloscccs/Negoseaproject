@@ -502,7 +502,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                 $("#cerrarSesion").click(function () {
                     $.ajax({
-                        url: "<?php echo site_url(); ?>/cSesion",
+                        url: "<?php echo site_url(); ?>/cSesion"
                     }).success(function (obj) {
 
                     });

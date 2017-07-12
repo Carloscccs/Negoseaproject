@@ -131,6 +131,55 @@ class gestionModel extends CI_Model {
         }
         return $respuesta;
     }
+    
+    function getIdNegocio($Rut){
+        $this->db->select("idNegocio");
+        $this->db->from("Negocio");
+        $this->db->where("rutUsuario", $Rut);
+        return $this->db->get()->result();
+    }
+    
+    function agregarProducto($nombre,$precio,$rutaImg,$tipoProducto,$Estado,$idNegocio){
+        $datos = array("Nombre"=>$nombre,"Precio"=>$precio,"rutaImg"=>$rutaImg,"tipoProducto"=>$tipoProducto,"Estado"=>$Estado,"idNegocio"=>$idNegocio);
+        $resultado = "Error desconocido";
+        if($this->db->insert("Producto",$datos)){
+            $resultado = "Producto agregado";
+        }else{
+            $resultado = "Error al agregar producto";
+        }
+        return $resultado;
+    }
+    
+    function getProductosNegocio($id){
+        $this->db->select("*");
+        $this->db->from("Producto");
+        $this->db->where("idNegocio",$id);
+        return $this->db->get()->result();
+    }
+    
+    function eliminarProducto($idProducto){
+        $this->db->where("idProducto",$idProducto);
+        $datos = array("Estado"=>'Eliminado');
+        $respuesta = "Error inesperado";
+        if($this->db->update("Producto",$datos)){
+            $respuesta = "Producto eliminado";
+        }else{
+            $respuesta = "Error al eliminar producto";
+        }
+        return $respuesta;
+    }
+    
+    function modificarProducto($idProducto,$nombre,$precio,$tipoProducto,$estado){
+        $datos = array("Nombre"=>$nombre,"Precio"=>$precio,"tipoProducto"=>$tipoProducto,"Estado"=>$estado);
+        $this->db->where("idProducto",$idProducto);
+        $respuesta = "Error desconocido";
+        if($this->db->update("Producto",$datos)){
+            $respuesta = "Producto modificado";
+        }else{
+            $respuesta = "Error al modificar producto";
+        }
+        return $respuesta;
+    }
 
 }
 

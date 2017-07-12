@@ -21,6 +21,14 @@ class Welcome extends CI_Controller {
         }
             
     }
+    
+    public function dueño(){
+        if ($this->session->userdata("usuario")) {
+            $this->load->view('moduloDueno');
+        }else{
+            $this->load->view('welcome_message');
+        }
+    }
 
     public function validarUsuario() {
         $rut = $this->input->post("lrut");
@@ -100,5 +108,39 @@ class Welcome extends CI_Controller {
         $Edad = $this->input->post("edad");
         $Correo = $this->input->post("correo");
         echo json_encode($this->gestionModel->modificarUsuario1($Rut,$Nombre,$Apellido,$Clave,$Edad,$Correo));
+    }
+    
+    public function getIdNegocio(){
+        $Rut = $this->input->post("Rut");
+        echo json_encode($this->gestionModel->getIdNegocio($Rut));
+    }
+    
+    public function agregarProducto(){
+        $nombre = $this->input->post("nombre");
+        $precio = $this->input->post("precio");
+        $rutaImg = $this->input->post("rutaImg");
+        $tipoProducto = $this->input->post("tipoProducto");
+        $estado = $this->input->post("estado");
+        $idNegocio = $this->input->post("idNegocio");
+        echo json_encode($this->gestionModel->agregarProducto($nombre,$precio,$rutaImg,$tipoProducto,$estado,$idNegocio));
+    }
+    
+    public function getProductosNegocio(){
+        $idNegocio = $this->input->post("idNegocio");
+        echo json_encode($this->gestionModel->getProductosNegocio($idNegocio));
+    }
+    
+    public function eliminarProducto(){
+        $idProducto = $this->input->post("idProducto");
+        echo json_encode($this->gestionModel->eliminarProducto($idProducto));
+    }
+    
+    public function modificarProducto(){
+        $idProducto = $this->input->post("idProducto");
+        $nombre = $this->input->post("nombre");
+        $precio = $this->input->post("precio");
+        $tipo = $this->input->post("tipo");
+        $estado = $this->input->post("estado");
+        echo json_encode($this->gestionModel->modificarProducto($idProducto,$nombre,$precio,$tipo,$estado));
     }
 }

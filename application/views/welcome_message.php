@@ -224,7 +224,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             }).success(function (obj) {
                                 if (obj == "Administrador") {
                                     window.location = "<?php echo site_url(); ?>/madmin";
-                                } else {
+                                } else if(obj == "Dueño"){
+                                    window.location = "<?php echo site_url(); ?>/mdueno";
+                                }else{
                                     Materialize.toast("Datos incorrecto o usuario no existe");
                                 }
                             }).fail(function (jqXHR, textStatus, errorThrown) {
