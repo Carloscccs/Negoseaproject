@@ -82,4 +82,23 @@ class Welcome extends CI_Controller {
     public function cerrarSesion(){
         $this->gestionModel->cerrarSesion();
     }
+    
+    public function getUsuarios(){
+        echo json_encode($this->gestionModel->getUsuarios());
+    }
+    
+    public function eliminarUsuario(){
+        $Rut = $this->input->post("idNegocio");
+        echo json_encode($this->gestionModel->eliminarUsuario($Rut));
+    }
+    
+    public function modificarUsuario1(){
+        $Rut = $this->input->post("Rut");
+        $Nombre = $this->input->post("nombre");
+        $Apellido = $this->input->post("apellido");
+        $Clave = $this->input->post("clave");
+        $Edad = $this->input->post("edad");
+        $Correo = $this->input->post("correo");
+        echo json_encode($this->gestionModel->modificarUsuario1($Rut,$Nombre,$Apellido,$Clave,$Edad,$Correo));
+    }
 }

@@ -103,6 +103,34 @@ class gestionModel extends CI_Model {
         $this->session->sess_destroy();
         header("Location:".site_url());
     }
+    
+    function getUsuarios(){
+        return $this->db->get("Usuario")->result();
+    }
+    
+    function eliminarUsuario($Rut){
+        $this->db->where("Rut",$Rut);
+        $datos = array("Rol"=>'Eliminado');
+        $respuesta = "Error inesperado";
+        if($this->db->update("Usuario",$datos)){
+            $respuesta = "Usuario eliminado";
+        }else{
+            $respuesta = "Error al eliminar usuario";
+        }
+        return $respuesta;
+    }
+    
+    function modificarUsuario1($Rut,$Nombre,$Apellido,$Clave,$Edad,$Correo){
+        $this->db->where("Rut",$Rut);
+        $datos = array("Nombre"=>$Nombre,"Apellido"=>$Apellido,"Clave"=>$Clave,"Edad"=>$Edad,"Correo"=>$Correo);
+        $respuesta = "Error inesperado";
+        if($this->db->update("Usuario",$datos)){
+            $respuesta = "Usuario modificado";
+        }else{
+            $respuesta = "Error al modificar usuario";
+        }
+        return $respuesta;
+    }
 
 }
 

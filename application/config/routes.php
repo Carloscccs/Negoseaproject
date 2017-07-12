@@ -63,3 +63,6 @@ $route['aNegocio'] = 'welcome/agregarNegocio';
 $route['eNegocio'] = 'welcome/eliminarNegocio';
 $route['mNegocio'] = 'welcome/actualizarNegocio';
 $route['cSesion'] = 'welcome/cerrarSesion';
+$route['getUsu'] = 'welcome/getUsuarios';
+$route['eUsu'] = 'welcome/eliminarUsuario';
+$route['mUsu'] = 'welcome/modificarUsuario1';

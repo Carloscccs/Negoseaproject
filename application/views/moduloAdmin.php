@@ -138,7 +138,26 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </table>
                     </div>
                 </div>
-                <div id="test2" class="col s12"><h1>Usuarios</h1></div>
+                <div id="test2" class="col s12">
+                    <div class="row">
+                        <div class="input-field col s4">
+                            <input id="txtBuscarUsuario" type="text" class="validate">
+                            <label for="txtBuscarUsuario">Nombre del usuario</label>
+                        </div>
+                        <div class="col s3">
+                            <br>
+                            <input id="btnBuscarUsuario" type="button" class="waves-effect waves-light btn" value="Buscar"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <table>
+                                <thead><th>Rut</th><th>Nombre</th><th>Edad</th><th>Correo</th><th>Rol</th><th>Modificar</th><th>Eliminar</th></thead>
+                                <tbody id="tbodyusuarios"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
             </div>
         </div>
@@ -196,6 +215,52 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
         </div>
 
+        <div id="modalEliminarUsuario" class="modal">
+            <div class="modal-content">
+                <h3>¿Esta seguro que desea eliminar este usuario?</h3>
+                <input type="hidden" id="rutoculto" />
+                <input type="hidden" id="roloculto" />
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="Si" id="bteliminarUsuSi" class="btn green"/>
+                <input type="button" value="No" id="bteliminarUsuNo" class="btn yellow modal-action modal-close"/>
+            </div>
+        </div>
+
+        <div id="modalActualizarUsuario" class="modal">
+            <div class="modal-content">
+                <h4>Actualizar usuario</h4>
+                <div class="input-field validate">
+                    <label for="txtMUrut">Rut</label>
+                    <input type="text" name="txtMUrut" id="txtMUrut" required="true" disabled="true" placeholder=""/>
+                </div>
+                <div class="input-field">
+                    <label for="txtMUnombre">Nombre</label>
+                    <input type="text" name="txtMUnombre" id="txtMUnombre" required="true" placeholder=""/>
+                </div>
+                <div class="input-field">
+                    <label for="txtMUapellido">Apellido</label>
+                    <input type="text" name="txtMUapellido" id="txtMUapellido" required="true" placeholder=""/>
+                </div>
+                <div class="input-field">
+                    <label for="txtMUclave">Clave</label>
+                    <input type="text" name="txtMUclave" id="txtMUclave" required="true" placeholder=""/>
+                </div>
+                <div class="input-field">
+                    <label for="txtMUedad">Edad</label>
+                    <input type="text" name="txtMUedad" id="txtMUedad" required="true" placeholder=""/>
+                </div>
+                <div class="input-field">
+                    <label for="txtMUcorreo">Correo</label>
+                    <input type="text" name="txtMUcorreo" id="txtMUcorreo" required="true" placeholder=""/>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="Actualizar" class="btn green" id="btnActualizarU"/>
+                <input type="button" value="Cancelar" class="btn red modal-action modal-close" id="btncancel"/>
+            </div>
+        </div>
+
         <footer class="page-footer teal lighten-2">
             <div class="container">
                 <div class="row">
@@ -244,6 +309,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 cargarSesion();
                 cargarNegocios();
                 cargarRegiones();
+                cargarUsuarios();
                 function cargarSesion() {
                     var url = "<?php echo site_url(); ?>/getUs";
                     $("#NombreUsuario").empty();
@@ -433,13 +499,128 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         });
                     }
                 });
-                
-                $("#cerrarSesion").click(function (){
+
+                $("#cerrarSesion").click(function () {
                     $.ajax({
-                        url: "<?php echo site_url();?>/cSesion",
-                    }).success(function (obj){
-                        
+                        url: "<?php echo site_url(); ?>/cSesion",
+                    }).success(function (obj) {
+
                     });
+                });
+
+                function cargarUsuarios() {
+                    var url = "<?php echo site_url(); ?>/getUsu";
+                    $("#tbodyusuarios").empty();
+                    $.getJSON(url, function (res) {
+                        $.each(res, function (i, o) {
+                            var x = "<tr><td>" + o.Rut + "</td>";
+                            x += "<td>" + o.Nombre + " " + o.Apellido + "</td>";
+                            x += "<td>" + o.Edad + "</td>";
+                            x += "<td>" + o.Correo + "</td>";
+                            x += "<td>" + o.Rol + "</td>";
+                            x += '<td> <button id="edit" value="' + o.Rut + "," + o.Nombre + "," + o.Apellido + "," + o.Edad + "," + o.Clave + "," + o.Correo + '" class="btn-ﬂoating btn-large waves-effect waves-light blue"><i class="material-icons">edit</i></button>';
+                            x += '<td> <button id="delete" value="' + o.Rut + "," + o.Rol + '" class="btn-ﬂoating btn-large waves-effect waves-light red"><i class="material-icons">delete</i></button></ td></tr>';
+                            $("#tbodyusuarios").append(x);
+                        });
+                    });
+                }
+
+                $("#tbodyusuarios").on("click", "#delete", function (e) {
+                    e.preventDefault();
+                    var datos = $(this).val();
+                    var fila = datos.split(",");
+                    $("#rutoculto").val(fila[0]);
+                    $("#roloculto").val(fila[1]);
+                    $("#modalEliminarUsuario").modal("open");
+                });
+
+                $("#bteliminarUsuSi").click(function () {
+                    var rut = $("#rutoculto").val();
+                    var rol = $("#roloculto").val();
+                    if (rol == "Usuario") {
+                        $.ajax({
+                            url: "<?php echo site_url() ?>/eUsu",
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {"Rut": rut}
+                        }).success(function (obj) {
+                            Materialize.toast("" + obj, 3000);
+                            $("#modalEliminar").modal("close");
+                            $("#tbodyusuarios").empty();
+                            cargarUsuarios();
+                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                            if (jqXHR.status === 0) {
+                                alert('Not connect: Verify Network.');
+                            } else if (jqXHR.status == 404) {
+                                alert('Requested page not found [404]');
+                            } else if (jqXHR.status == 500) {
+                                alert('Internal Server Error [500].');
+                            } else if (textStatus === 'parsererror') {
+                                alert('Requested JSON parse failed.');
+                            } else if (textStatus === 'timeout') {
+                                alert('Time out error.');
+                            } else if (textStatus === 'abort') {
+                                alert('Ajax request aborted.');
+                            } else {
+                                alert('Uncaught Error: ' + jqXHR.responseText);
+                            }
+                        });
+                    } else {
+                        Materialize.toast("Solo se pueden eliminar los usuarios con Rol = Usuario");
+                    }
+                });
+
+                $("#tbodyusuarios").on("click", "#edit", function (e) {
+                    e.preventDefault();
+                    var datos = $(this).val();
+                    var fila = datos.split(",");
+                    $("#txtMUrut").val(fila[0]);
+                    $("#txtMUnombre").val(fila[1]);
+                    $("#txtMUapellido").val(fila[2]);
+                    $("#txtMUedad").val(fila[3]);
+                    $("#txtMUclave").val(fila[4]);
+                    $("#txtMUcorreo").val(fila[5]);
+                    $("#modalActualizarUsuario").modal('open');
+                });
+
+                $("#btnActualizarU").click(function () {
+                    var Rut = $("#txtMUrut").val();
+                    var nombre = $("#txtMUnombre").val();
+                    var apellido = $("#txtMUapellido").val();
+                    var clave = $("#txtMUclave").val();
+                    var edad = $("#txtMUedad").val();
+                    var correo = $("#txtMUcorreo").val();
+                    if (nombre == "" || apellido == "" || clave == "" || edad == "" || correo == "") {
+                        Materialize.toast("Faltan datos");
+                    } else {
+                        $.ajax({
+                            url: "<?php echo site_url(); ?>/mUsu",
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {"Rut": Rut, "nombre": nombre, "apellido": apellido, "clave": clave, "edad": edad, "correo": correo}
+                        }).success(function (obj) {
+                            Materialize.toast("" + obj, 3000);
+                            $("#modalActualizarUsuario").modal('close');
+                            $("#tbodyusuarios").empty();
+                            cargarUsuarios();
+                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                            if (jqXHR.status === 0) {
+                                alert('Not connect: Verify Network.');
+                            } else if (jqXHR.status == 404) {
+                                alert('Requested page not found [404]');
+                            } else if (jqXHR.status == 500) {
+                                alert('Internal Server Error [500].');
+                            } else if (textStatus === 'parsererror') {
+                                alert('Requested JSON parse failed.');
+                            } else if (textStatus === 'timeout') {
+                                alert('Time out error.');
+                            } else if (textStatus === 'abort') {
+                                alert('Ajax request aborted.');
+                            } else {
+                                alert('Uncaught Error: ' + jqXHR.responseText);
+                            }
+                        });
+                    }
                 });
 
             });
