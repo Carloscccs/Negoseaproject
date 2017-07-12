@@ -136,10 +136,13 @@ class gestionModel extends CI_Model {
         $this->db->select("idNegocio");
         $this->db->from("Negocio");
         $this->db->where("rutUsuario", $Rut);
-        return $this->db->get()->result();
+        $id = $this->db->get()->result();
+        return $id[0]->idNegocio;
     }
     
-    function agregarProducto($nombre,$precio,$rutaImg,$tipoProducto,$Estado,$idNegocio){
+    function agregarProducto($nombre,$precio,$rutaImg,$tipoProducto,$Estado){
+        $user = $this->getUsuario();
+        $idNegocio = $this->getIdNegocio($user->Rut);
         $datos = array("Nombre"=>$nombre,"Precio"=>$precio,"rutaImg"=>$rutaImg,"tipoProducto"=>$tipoProducto,"Estado"=>$Estado,"idNegocio"=>$idNegocio);
         $resultado = "Error desconocido";
         if($this->db->insert("Producto",$datos)){

@@ -40,7 +40,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </ul>
                 </div>
                 <div id="test1" class="col s12">
-                    <h3>Agregar negocio</h3>
+                    <h4>Agregar negocio</h4>
                     <div class="row">
                         <div class="col s12">
                             <div class="row">
@@ -118,7 +118,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </div>
 
                     </div>
-                    <h3>Negocios existentes</h3>
+                    <h4>Negocios existentes</h4>
                     <div class="row">
                         <div class="col s4">
                             <div class="input-field col s12">

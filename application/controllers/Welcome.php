@@ -121,13 +121,12 @@ class Welcome extends CI_Controller {
         $rutaImg = $this->input->post("rutaImg");
         $tipoProducto = $this->input->post("tipoProducto");
         $estado = $this->input->post("estado");
-        $idNegocio = $this->input->post("idNegocio");
-        echo json_encode($this->gestionModel->agregarProducto($nombre,$precio,$rutaImg,$tipoProducto,$estado,$idNegocio));
+        echo json_encode($this->gestionModel->agregarProducto($nombre,$precio,$rutaImg,$tipoProducto,$estado));
     }
     
     public function getProductosNegocio(){
         $idNegocio = $this->input->post("idNegocio");
-        echo json_encode($this->gestionModel->getProductosNegocio($idNegocio));
+        echo json_encode($this->gestionModel->getProductosNegocio(6));
     }
     
     public function eliminarProducto(){

@@ -227,8 +227,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 $('ul.tabs').tabs();
                 $(".modal").modal();
                 cargarSesion();
-                cargarID();
                 cargarProductos();
+                cargarID();
                 function cargarSesion() {
                     var url = "<?php echo site_url(); ?>/getUs";
                     $("#NombreUsuario").empty();
@@ -236,19 +236,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         var x = res.Nombre + " " + res.Apellido;
                         var y = res.Rut;
                         $("#NombreUsuario").append(x);
-                        $("#rutoculto").val(y);
+                        $("#rutUsuario").val(y);
                     });
                 }
 
                 function cargarID() {
-                    var Rut = $("#rutoculto").val();
+                    var Rut = $("#rutUsuario").val();
                     $.ajax({
                         url: "<?php echo site_url(); ?>/getIdNego",
                         type: 'POST',
                         dataType: 'json',
                         data: {"Rut": Rut}
                     }).success(function (obj) {
-                        $("#idoculto").val(obj);
+                        $("#idNegocio").val(obj);
                     });
                 }
 
@@ -258,27 +258,27 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     var rutaImg = "<?php echo base_url(); ?>img/productos/default.jpg";
                     var tipoProducto = $("#selectTipo").val();
                     var estado = $("#selectEstado").val();
-                    var idNegocio = $("#idoculto").val();
-                    $.ajax({
-                        url: "<?php echo site_url(); ?>/aProducto",
-                        type: 'POST',
-                        dataType: 'json',
-                        data: {"nombre": nombre, "precio": precio, "rutaImg": rutaImg, "tipoProducto": tipoProducto, "estado": estado, "idNegocio": idNegocio}
-                    }).success(function (obj) {
-                        Materialize.toast("" + obj);
-                        cargarProductos();
-                    });
+                    var idNegocio = $("#idNegocio").val();
+                    if (nombre == "" || precio == 0 || tipoProducto == "" || estado == "") {
+                        Materialize.toast("Rellene todos los campos");
+                    } else {
+                        $.ajax({
+                            url: "<?php echo site_url(); ?>/aProducto",
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {"nombre": nombre, "precio": precio, "rutaImg": rutaImg, "tipoProducto": tipoProducto, "estado": estado}
+                        }).success(function (obj) {
+                            Materialize.toast("" + obj);
+                            cargarProductos();
+                        });
+                    }
                 });
 
                 function cargarProductos() {
-                    var idNegocio = $("#idoculto").val();
-                    $.ajax({
-                        url: "<?php echo site_url(); ?>/getProduNego",
-                        type: 'POST',
-                        dataType: 'json',
-                        data: {"idNegocio": idNegocio}
-                    }).success(function (obj) {
-                        $.each(obj, function (i, o) {
+                    var url = "<?php echo site_url();?>/getProduNego";
+                    $("#tbodyProductos").empty();
+                    $.getJSON(url, function (res){
+                        $.each(res, function (i, o) {
                             var x = "<tr><td><img src'" + o.rutaImg + "' /></td>";
                             x += "<td>" + o.Nombre + "</td>";
                             x += "<td>" + o.Precio + "</td>";
@@ -286,7 +286,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             x += "<td>" + o.Estado + "</td>";
                             x += '<td> <button id="edit" value="' + o.idProducto + "," + o.Nombre + "," + o.Precio + "," + o.tipoProducto + '" class="btn-ﬂoating btn-large waves-effect waves-light blue"><i class="material-icons">edit</i></button>';
                             x += '<td> <button id="delete" value="' + o.idProducto + '" class="btn-ﬂoating btn-large waves-effect waves-light red"><i class="material-icons">delete</i></button></ td></tr>';
-                            $("#tbodynegocios").append(x);
+                            $("#tbodyProductos").append(x);
                         });
                     });
                 }
@@ -294,7 +294,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 $("#tbodyProductos").on("click", "#delete", function (e) {
                     e.preventDefault();
                     $("#idoculto").val($(this).val());
-                    $("#modalEliminarNegocio").modal("open");
+                    $("#modalEliminarProducto").modal("open");
                 });
 
                 $("#bteliminarProdSi").click(function () {
@@ -327,7 +327,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         }
                     });
                 });
-                
+
                 $("#tbodyProductos").on("click", "#edit", function (e) {
                     e.preventDefault();
                     var datos = $(this).val();
@@ -337,14 +337,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     $("#txtMPprecio").val(fila[3]);
                     $("#modalActualizarProducto").modal('open');
                 });
-                
+
                 $("#btnActualizarP").click(function () {
                     var id = $("#txtMPid").val();
                     var nombre = $("#txtMPnombre").val();
                     var precio = $("#txtMPprecio").val();
                     var tipo = $("#selectMPTipo").val();
                     var estado = $("#selectMPEstado").val();
-                    if (nombre == "" || precio == "" ) {
+                    if (nombre == "" || precio == "") {
                         Materialize.toast("Faltan datos");
                     } else {
                         $.ajax({
@@ -376,7 +376,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         });
                     }
                 });
-                
+
                 $("#cerrarSesion").click(function () {
                     $.ajax({
                         url: "<?php echo site_url(); ?>/cSesion"
