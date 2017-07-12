@@ -21,7 +21,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <a id="logo-container" href="#" class="brand-logo"><img src="<?php echo base_url(); ?>img/logo-sin.gif" /></a>
                 <ul class="right hide-on-med-and-down">
                     <li><a id="NombreUsuario" href="#">name</a></li>
-                    <li><a href="">Cerrar sesion</a></li>
+                    <li><a id="cerrarSesion" href="">Cerrar sesion</a></li>
                 </ul>
 
                 <ul id="nav-mobile" class="side-nav">
@@ -66,13 +66,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <input id="txtHorario" type="text" class="validate">
                                     <label for="txtHorario">Horario</label>
                                 </div>
+                                <div class="col s4">
+                                    <label>Tipo de negocio</label>
+                                    <select class="browser-default" id="selectTipo">
+                                        <option value="" disabled="true" selected>Seleccione</option>
+                                        <option value="Verduderia">Verduderia</option>
+                                        <option value="Carniceria">Carniceria</option>
+                                        <option value="Panaderia">Panaderia</option>
+                                        <option value="Limpieza">Limpieza</option>
+                                        <option value="Confiteria">Confiteria</option>
+                                        <option value="Minimarket">Minimarket</option>
+                                    </select>
+                                </div>
 
                             </div>
                             <div class="row">
                                 <div class="file-field input-field s12">
                                     <div class="btn">
                                         <span>Foto</span>
-                                        <input type="file">
+                                        <input type="file" disabled="true">
                                     </div>
                                     <div class="file-path-wrapper">
                                         <input class="file-path validate" type="text">
@@ -83,25 +95,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <div class="col s4">
                                     <label>Region</label>
                                     <select class="browser-default" id="selectRegion">
-                                        <option value="0" selected>Region x</option>
+                                        <option value="" disabled="true" selected>Seleccione</option>
                                     </select>
                                 </div>
                                 <div class="col s4">
                                     <label>Provincia</label>
                                     <select class="browser-default" id="selectProvincia">
-                                        <option value="0" selected>Provincia x</option>
+                                        <option value="" disabled="true" selected>Seleccione</option>
                                     </select>
 
                                 </div>
                                 <div class="col s4">
                                     <label>Comuna</label>
-                                    <select class="browser-default">
-                                        <option value="0" selected>Comuna x</option>
+                                    <select class="browser-default" id="selectComuna">
+                                        <option value="" disabled="" selected>Seleccione</option>
                                     </select>  
                                 </div>
                             </div>
                             <div class="row">
-                                <input type="button" class="waves-effect waves-light btn light-green accent-3 s12" value="Agregar negocio"/>
+                                <input type="button" class="waves-effect waves-light btn light-green accent-3 s12" value="Agregar negocio" id="btnAgregarNegocio"/>
                             </div>
                         </div>
 
@@ -131,6 +143,58 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
         </div>
 
+        <div id="modalEliminarNegocio" class="modal">
+            <div class="modal-content">
+                <h3>¿Esta seguro que desea eliminar este negocio?</h3>
+                <input type="hidden" id="idoculto" />
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="Si" id="bteliminarNegSi" class="btn green"/>
+                <input type="button" value="No" id="bteliminarNegNo" class="btn yellow modal-action modal-close"/>
+            </div>
+        </div>
+
+        <div id="modalActualizarNeg" class="modal">
+            <div class="modal-content">
+                <h4>Actualizar negocio</h4>
+                <div class="input-field validate">
+                    <label for="txtMNid">ID</label>
+                    <input type="text" name="txtMNid" id="txtMNid" required="true" disabled="true" placeholder=""/>
+                </div>
+                <div class="input-field">
+                    <label for="txtMNnombre">Nombre del negocio</label>
+                    <input type="text" name="txtMNnombre" id="txtMNnombre" required="true" placeholder=""/>
+                </div>
+                <div class="input-field">
+                    <label for="txtMNhorario">Horario de atencio</label>
+                    <input type="text" name="txtMNhorario" id="txtMNhorario" required="true" placeholder=""/>
+                </div>
+                <div class="">
+                    <label>Tipo de negocio</label>
+                    <select class="browser-default" id="selectMNTipo">
+                        <option value="nada" disabled="true" selected>Seleccione</option>
+                        <option value="Verduderia">Verduderia</option>
+                        <option value="Carniceria">Carniceria</option>
+                        <option value="Panaderia">Panaderia</option>
+                        <option value="Limpieza">Limpieza</option>
+                        <option value="Confiteria">Confiteria</option>
+                        <option value="Minimarket">Minimarket</option>
+                    </select>
+                </div>
+                <div class="input-field">
+                    <label for="txtMNlatitud">Latitud</label>
+                    <input type="text" name="txtMNlatitud" id="txtMNlatitud" required="true" placeholder=""/>
+                </div>
+                <div class="input-field">
+                    <label for="txtMNlongitud">Longitud</label>
+                    <input type="text" name="txtMNlongitud" id="txtMNlongitud" required="true" placeholder=""/>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="Actualizar" class="btn green" id="btnActualizarN"/>
+                <input type="button" value="Cancelar" class="btn red modal-action modal-close" id="btncancel"/>
+            </div>
+        </div>
 
         <footer class="page-footer teal lighten-2">
             <div class="container">
@@ -176,6 +240,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <script>
             $(function () {
                 $('ul.tabs').tabs();
+                $(".modal").modal();
                 cargarSesion();
                 cargarNegocios();
                 cargarRegiones();
@@ -189,25 +254,26 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 }
 
                 function cargarNegocios() {
-                    var url = "<?php echo site_url(); ?>/verNego";
+                    var url = "<?php echo site_url(); ?>/getNeg";
                     $("#tbodynegocios").empty();
                     $.getJSON(url, function (res) {
-                        if (res != null) {
-                            $.each(res, function (i, o) {
-                                var x = "<tr><td>" + o.Nombre + "</td>";
-                                x += "<td>" + o.rutUsuario + "</td>";
-                                x += "<td>" + o.latitud + "<br>" + o.longitud + "</td>";
-                                x += "<td>" + o.tipoNegocio + "</td>";
-                                x += '<td> <button id="edit" value="' + o.idNegocio + "," + o.Nombre + "," + o.rutUsuario + "," + o.latitud + "," + o.longitud + "," + o.tipoNegocio + '" class="btn-ﬂoating btn-large waves-effect waves-light blue"><i class="material-icons">edit</i></button>';
-                                x += '<td> <button id="delete" value="' + o.idNegocio + '" class="btn-ﬂoating btn-large waves-effect waves-light red"><i class="material-icons">delete</i></button></ td></tr>';
-                            });
-                        }
+                        $.each(res, function (i, o) {
+                            var x = "<tr><td>" + o.Nombre + "</td>";
+                            x += "<td>" + o.rutUsuario + "</td>";
+                            x += "<td>" + o.latitud + "<br>" + o.longitud + "</td>";
+                            x += "<td>" + o.horarioAtencion + "</td>";
+                            x += "<td>" + o.tipoNegocio + "</td>";
+                            x += '<td> <button id="edit" value="' + o.idNegocio + "," + o.Nombre + "," + o.rutUsuario + "," + o.latitud + "," + o.longitud + "," + o.tipoNegocio + "," + o.horarioAtencion + '" class="btn-ﬂoating btn-large waves-effect waves-light blue"><i class="material-icons">edit</i></button>';
+                            x += '<td> <button id="delete" value="' + o.idNegocio + '" class="btn-ﬂoating btn-large waves-effect waves-light red"><i class="material-icons">delete</i></button></ td></tr>';
+                            $("#tbodynegocios").append(x);
+                        });
                     });
                 }
 
                 function cargarRegiones() {
                     var url = "<?php echo site_url(); ?>/getRegi";
-                    $("#selectRegion").empty();
+                    $("#selectProvincia").prop('disabled', true);
+                    $("#selectComuna").prop('disabled', true);
                     $.getJSON(url, function (res) {
                         $.each(res, function (i, o) {
                             var x = "<option value='" + o.id + "'>" + o.nombre + "</option>";
@@ -224,14 +290,157 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         dataType: 'json',
                         data: {"id": id}
                     }).success(function (obj) {
+                        $("#selectProvincia").prop('disabled', false);
                         $("#selectProvincia").empty();
+                        $("#selectProvincia").append("<option value='' disabled='true' selected >Seleccione</option>");
                         $.each(obj, function (i, o) {
                             var x = "<option value='" + o.id + "'>" + o.nombre + "</option>";
                             $("#selectProvincia").append(x);
                         });
                     });
-                })
+                });
 
+                $("#selectProvincia").change(function () {
+                    var id = $("#selectProvincia").val();
+                    $.ajax({
+                        url: "<?php echo site_url(); ?>/getComu",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {"id": id}
+                    }).success(function (obj) {
+                        $("#selectComuna").prop('disabled', false);
+                        $("#selectComuna").empty();
+                        $("#selectComuna").append("<option value='' disabled='true' selected >Seleccione</option>");
+                        $.each(obj, function (i, o) {
+                            var x = "<option value='" + o.id + "'>" + o.nombre + "</option>";
+                            $("#selectComuna").append(x);
+                        });
+                    });
+                });
+
+                $("#btnAgregarNegocio").click(function () {
+                    var nombre = $("#txtNombre").val();
+                    var horario = $("#txtHorario").val();
+                    var rutaImg = "<?php echo base_url(); ?>img/negocios/default.jpg";
+                    var tipo = $("#selectTipo").val();
+                    var latitud = $("#txtLatitud").val();
+                    var longitud = $("#txtLongitud").val();
+                    var rutUsuario = $("#txtrutDueño").val();
+                    var idRegion = $("#selectRegion").val();
+                    var idProvincia = $("#selectProvincia").val();
+                    var idComuna = $("#selectComuna").val();
+                    if (nombre.length == 0 || horario.length == 0 || tipo == 0 || latitud.length == 0 || longitud.length == 0 || rutUsuario.length == 0 || idRegion == 0 || idProvincia == 0 || idComuna == 0) {
+                        Materialize.toast("Todos los datos son obligatorios");
+                    } else {
+                        $.ajax({
+                            url: "<?php echo site_url(); ?>/aNegocio",
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {"nombre": nombre, "horario": horario, "rutaImg": rutaImg, "tipo": tipo, "latitud": latitud, "longitud": longitud, "rutUsuario": rutUsuario, "idRegion": idRegion, "idProvincia": idProvincia, "idComuna": idComuna}
+                        }).success(function (obj) {
+                            Materialize.toast("" + obj);
+                            $("#tbodynegocios").empty();
+                            cargarNegocios();
+                        });
+                    }
+                });
+
+                $("#tbodynegocios").on("click", "#delete", function (e) {
+                    e.preventDefault();
+                    $("#idoculto").val($(this).val());
+                    $("#modalEliminarNegocio").modal("open");
+                });
+
+                $("#bteliminarNegSi").click(function () {
+                    var id = $("#idoculto").val();
+                    $.ajax({
+                        url: "<?php echo site_url() ?>/eNegocio",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {"idNegocio": id}
+                    }).success(function (obj) {
+                        Materialize.toast("" + obj, 3000);
+                        $("#modalEliminar").modal("close");
+                        $("#tbodynegocios").empty();
+                        cargarNegocios();
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        if (jqXHR.status === 0) {
+                            alert('Not connect: Verify Network.');
+                        } else if (jqXHR.status == 404) {
+                            alert('Requested page not found [404]');
+                        } else if (jqXHR.status == 500) {
+                            alert('Internal Server Error [500].');
+                        } else if (textStatus === 'parsererror') {
+                            alert('Requested JSON parse failed.');
+                        } else if (textStatus === 'timeout') {
+                            alert('Time out error.');
+                        } else if (textStatus === 'abort') {
+                            alert('Ajax request aborted.');
+                        } else {
+                            alert('Uncaught Error: ' + jqXHR.responseText);
+                        }
+                    });
+                });
+
+                $("#tbodynegocios").on("click", "#edit", function (e) {
+                    e.preventDefault();
+                    var datos = $(this).val();
+                    var fila = datos.split(",");
+                    $("#txtMNid").val(fila[0]);
+                    $("#txtMNnombre").val(fila[1]);
+                    $("#txtMNlatitud").val(fila[3]);
+                    $("#txtMNlongitud").val(fila[4]);
+                    $("#txtMNhorario").val(fila[6]);
+                    $("#modalActualizarNeg").modal('open');
+                });
+
+                $("#btnActualizarN").click(function () {
+                    var id = $("#txtMNid").val();
+                    var nombre = $("#txtMNnombre").val();
+                    var latitud = $("#txtMNlatitud").val();
+                    var longitud = $("#txtMNlongitud").val();
+                    var horario = $("#txtMNhorario").val();
+                    var tipo = $("#selectMNTipo").val();
+                    if (nombre == "" || latitud == "" || longitud == "" || horario == "" || tipo == "nada") {
+                        Materialize.toast("Faltan datos");
+                    } else {
+                        $.ajax({
+                            url: "<?php echo site_url(); ?>/mNegocio",
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {"idNegocio": id, "nombre": nombre, "latitud": latitud, "longitud": longitud, "horario": horario, "tipo": tipo}
+                        }).success(function (obj) {
+                            Materialize.toast("" + obj, 3000);
+                            $("#modalActualizarNeg").modal('close');
+                            $("#tbodynegocios").empty();
+                            cargarNegocios();
+                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                            if (jqXHR.status === 0) {
+                                alert('Not connect: Verify Network.');
+                            } else if (jqXHR.status == 404) {
+                                alert('Requested page not found [404]');
+                            } else if (jqXHR.status == 500) {
+                                alert('Internal Server Error [500].');
+                            } else if (textStatus === 'parsererror') {
+                                alert('Requested JSON parse failed.');
+                            } else if (textStatus === 'timeout') {
+                                alert('Time out error.');
+                            } else if (textStatus === 'abort') {
+                                alert('Ajax request aborted.');
+                            } else {
+                                alert('Uncaught Error: ' + jqXHR.responseText);
+                            }
+                        });
+                    }
+                });
+                
+                $("#cerrarSesion").click(function (){
+                    $.ajax({
+                        url: "<?php echo site_url();?>/cSesion",
+                    }).success(function (obj){
+                        
+                    });
+                });
 
             });
         </script>
