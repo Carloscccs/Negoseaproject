@@ -40,7 +40,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </ul>
                 </div>
                 <div id="test1" class="col s12">
-                    <h4>Agregar negocio</h4>
+                    <h4>Agregar negocio</h4><a href="http://www.mapcoordinates.net/es" target="_blank">Buscar coordenadas</a>
                     <div class="row">
                         <div class="col s12">
                             <div class="row">
@@ -265,27 +265,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <div class="container">
                 <div class="row">
                     <div class="col l6 s12">
-                        <h5 class="white-text">NegoSea</h5>
-                        <p class="grey-text text-lighten-4">Un empresa bla bla bla bla</p>
+                        <h5 class="white-text">NegoSeApp</h5>
+                        <p class="grey-text text-lighten-4">Es un sistema que le ayudara a buscar facilmente un producto en muchos negocios dentro de un area,
+                            ahorrando el trabajo de salir sin rumbo buscando un produco</p>
 
 
                     </div>
                     <div class="col l3 s12">
-                        <h5 class="white-text">Settings</h5>
+                        <h5 class="white-text">Funciones</h5>
                         <ul>
-                            <li><a class="white-text" href="#!">Link 1</a></li>
-                            <li><a class="white-text" href="#!">Link 2</a></li>
-                            <li><a class="white-text" href="#!">Link 3</a></li>
-                            <li><a class="white-text" href="#!">Link 4</a></li>
+                            <li><a class="white-text" href="#!">Buscar un producto</a></li>
+                            <li><a class="white-text" href="#!">Seleccionar un negocio</a></li>
+                            <li><a class="white-text" href="#!">Comprar productos</a></li>
                         </ul>
                     </div>
                     <div class="col l3 s12">
-                        <h5 class="white-text">Connect</h5>
+                        <h5 class="white-text">Contacto</h5>
                         <ul>
-                            <li><a class="white-text" href="#!">Link 1</a></li>
-                            <li><a class="white-text" href="#!">Link 2</a></li>
-                            <li><a class="white-text" href="#!">Link 3</a></li>
-                            <li><a class="white-text" href="#!">Link 4</a></li>
+                            <li><a class="white-text" href="#!">Quiero que mi negocio aparesca!, presione</a></li>
+                            <li><a class="white-text" href="#!">Tengo una duda! presione</a></li>
                         </ul>
                     </div>
                 </div>

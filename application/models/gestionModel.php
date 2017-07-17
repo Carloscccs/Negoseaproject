@@ -211,6 +211,28 @@ class gestionModel extends CI_Model {
         }
         return $respuesta;
     }
+    
+    function getProductosNegocio2($id){
+        $this->db->select("*");
+        $this->db->from("Producto");
+        $this->db->where("idNegocio",$id)->where("Estado",'Disponible');
+        return $this->db->get()->result();
+    }
+    
+    function buscarProductoNegocios($Nombre){
+        $this->db->select("n.idNegocio,n.Nombre,n.horarioAtencion,n.tipoNegocio,n.latitud,n.longitud");
+        $this->db->from("Negocio n");
+        $this->db->join("Producto p","p.idNegocio = n.idNegocio");
+        $this->db->like("p.Nombre",$Nombre);
+        return $this->db->get()->result();
+    }
+    
+    function getDatosNegocio($idNegocio){
+        $this->db->select("*");
+        $this->db->from("Negocio");
+        $this->db->where("idNegocio",$idNegocio);
+        return $this->db->get()->result();
+    }
 
 }
 

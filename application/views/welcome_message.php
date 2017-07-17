@@ -38,18 +38,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <div class="row">
                 <div class="col s12 l8">
                     <div class="input-field col s4">
-                        <input id="ubicacion" type="text" class="validate" disabled="true">
+                        <input id="ubicacion" type="text" class="validate" >
                         <label for="ubicacion">Ubicacion</label>
-                    </div>
-                    <div class="col s1"></div>
-                    <div class="input-field col s4">
-                        <input id="producto" type="text" class="validate">
-                        <label for="producto">Producto</label>
                     </div>
                     <div class="col s3">
                         <p></p>
                         <a id="btnBuscar" class="waves-effect waves-light btn">Buscar</a>
                     </div>
+                    <div class="input-field col s3">
+                        <input id="producto" type="text" class="validate">
+                        <label for="producto">Producto</label>
+                    </div>
+                    <div class="col s2">
+                        <p></p>
+                        <a id="btnBuscarProductoMapa" class="waves-effect waves-light btn">Buscar</a>
+                    </div>
+
                 </div>
             </div>
             <div class="row">
@@ -73,7 +77,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div>
                 <div class="row">
                     <div class="input-field col s12">
-                        <input id="lpass" type="text" class="validate">
+                        <input id="lpass" type="password" class="validate">
                         <label for="lpass">CLAVE</label>
                     </div>
                 </div>
@@ -114,7 +118,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div>
                 <div class="row">
                     <div class="input-field col s12">
-                        <input id="Clave" type="text" class="validate">
+                        <input id="Clave" type="password" class="validate">
                         <label for="Clave">CLAVE</label>
                     </div>
                 </div>
@@ -159,27 +163,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <div class="container">
                 <div class="row">
                     <div class="col l6 s12">
-                        <h5 class="white-text">NegoSea</h5>
-                        <p class="grey-text text-lighten-4">Un empresa bla bla bla bla</p>
+                        <h5 class="white-text">NegoSeApp</h5>
+                        <p class="grey-text text-lighten-4">Es un sistema que le ayudara a buscar facilmente un producto en muchos negocios dentro de un area,
+                            ahorrando el trabajo de salir sin rumbo buscando un produco</p>
 
 
                     </div>
                     <div class="col l3 s12">
-                        <h5 class="white-text">Settings</h5>
+                        <h5 class="white-text">Funciones</h5>
                         <ul>
-                            <li><a class="white-text" href="#!">Link 1</a></li>
-                            <li><a class="white-text" href="#!">Link 2</a></li>
-                            <li><a class="white-text" href="#!">Link 3</a></li>
-                            <li><a class="white-text" href="#!">Link 4</a></li>
+                            <li><a class="white-text" href="#!">Buscar un producto</a></li>
+                            <li><a class="white-text" href="#!">Seleccionar un negocio</a></li>
+                            <li><a class="white-text" href="#!">Comprar productos</a></li>
                         </ul>
                     </div>
                     <div class="col l3 s12">
-                        <h5 class="white-text">Connect</h5>
+                        <h5 class="white-text">Contacto</h5>
                         <ul>
-                            <li><a class="white-text" href="#!">Link 1</a></li>
-                            <li><a class="white-text" href="#!">Link 2</a></li>
-                            <li><a class="white-text" href="#!">Link 3</a></li>
-                            <li><a class="white-text" href="#!">Link 4</a></li>
+                            <li><a class="white-text" href="#!">Quiero que mi negocio aparesca!, presione</a></li>
+                            <li><a class="white-text" href="#!">Tengo una duda! presione</a></li>
                         </ul>
                     </div>
                 </div>
@@ -205,6 +207,39 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     coords: [-35.43606651, -71.62379444], // Map center (optional)
                     type: "ROADMAP" // Map type (optional)
                 });
+                cargarMarcadores();
+                function cargarMarcadores() {
+                    var url = "<?php echo site_url(); ?>/getNeg";
+                    $.getJSON(url, function (res) {
+                        $.each(res, function (i, o) {
+                            $("#map").addMarker({
+                                coords: [o.latitud, o.longitud], // GPS coords
+                                title: o.Nombre, // Title
+                                text: "<b>"+o.tipoNegocio+" - Horario: "+o.horarioAtencion+" <a href='<?php echo site_url(); ?>/venta?id="+o.idNegocio+"' >Ir</a></b>" // HTML content
+                            });
+                        });
+                    });
+
+                }
+                
+                $("#btnBuscarProductoMapa").click(function (){
+                    var Nombre = $("#producto").val();
+                    $.ajax({
+                        url: "<?php echo site_url();?>/busProdNegs",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {"nombreProducto":Nombre}
+                    }).success(function (obj){
+                        $("#map").googleMap();
+                        $.each(obj,function(i,o){
+                            $("#map").addMarker({
+                                coords: [o.latitud, o.longitud], // GPS coords
+                                title: o.Nombre, // Title
+                                text: "<b>"+o.tipoNegocio+" - Horario: "+o.horarioAtencion+" <a href='<?php echo site_url(); ?>/venta?id="+o.idNegocio+"' >Ir</a></b>" // HTML content
+                            });
+                        });
+                    });
+                });
 
                 $("#btnIngresar").click(function () {
                     var rut = $("#lrut").val();
@@ -223,15 +258,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             }).success(function (obj) {
                                 if (obj == "Administrador") {
                                     window.location = "<?php echo site_url(); ?>/madmin";
-                                } else if(obj == "Dueño"){
+                                } else if (obj == "Dueño") {
                                     window.location = "<?php echo site_url(); ?>/mdueno";
-                                }else if(obj == "Usuario"){
+                                } else if (obj == "Usuario") {
                                     window.location = "<?php echo site_url(); ?>/musu";
-                                }else{
+                                } else {
                                     Materialize.toast("Datos incorrecto o usuario no existe");
                                 }
-                                    
-                                
+
+
                             }).fail(function (jqXHR, textStatus, errorThrown) {
                                 if (jqXHR.status === 0) {
                                     alert('Not connect: Verify Network.');
@@ -251,15 +286,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             });
                         }
                     }
-                });
-
-                $("#btnBuscar").click(function () {
-                    $("#map").googleMap();
-                    $("#map").addMarker({
-                        coords: [-35.43611021, -71.62354767], // GPS coords
-                        zoom: 16,
-                        text: '<h3>Don pepe</h3> <br> TIPO: Verdureria <br> <a href="#" >Click aqui</a>' // HTML content
-                    });
                 });
 
                 function cargarRegiones() {
@@ -309,8 +335,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         });
                     });
                 });
-                
-                $("#btnRegistrarse").click(function (){
+
+                $("#btnRegistrarse").click(function () {
                     var Rut = $("#Rut").val();
                     var Nombre = $("#Nombre").val();
                     var Apellido = $("#Apellido").val();
@@ -320,20 +346,47 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     var idRegion = $("#selectRegion").val();
                     var idProvincia = $("#selectProvincia").val();
                     var idComuna = $("#selectComuna").val();
-                    if(Rut == "" || Nombre == "" || Apellido == "" || Edad == "" || Clave == "" || Correo == "" || idRegion == 0 || idProvincia == 0 || idComuna == 0){
+                    if (Rut == "" || Nombre == "" || Apellido == "" || Edad == "" || Clave == "" || Correo == "" || idRegion == 0 || idProvincia == 0 || idComuna == 0) {
                         Materialize.toast("Todos los campos son obligatorios");
-                    }else{
+                    } else {
                         $.ajax({
-                            url: "<?php echo site_url();?>/rUsuario",
+                            url: "<?php echo site_url(); ?>/rUsuario",
                             type: 'POST',
                             dataType: 'json',
-                            data: {"Rut":Rut,"Nombre":Nombre,"Apellido":Apellido,"Edad":Edad,"Clave":Clave,"Correo":Correo,"idRegion":idRegion,"idProvincia":idProvincia,"idComuna":idComuna}
-                        }).success(function (obj){
+                            data: {"Rut": Rut, "Nombre": Nombre, "Apellido": Apellido, "Edad": Edad, "Clave": Clave, "Correo": Correo, "idRegion": idRegion, "idProvincia": idProvincia, "idComuna": idComuna}
+                        }).success(function (obj) {
                             Materialize.toast(obj);
                             $("#modalRegistrarse").modal('close');
                         });
                     }
                 });
+
+                $("#btnBuscar").click(function () {
+                    var direccion = $("#ubicacion").val();
+                    var geocoder = new google.maps.Geocoder();
+                    geocoder.geocode({'address': direccion}, geocodeResult);
+                });
+
+                function geocodeResult(results, status) {
+                    // Verificamos el estatus
+
+                    if (status == 'OK') {
+                        // Si hay resultados encontrados, centramos y repintamos el mapa
+                        // esto para eliminar cualquier pin antes puesto
+                        var mapOptions = {
+                            center: results[0].geometry.location,
+                            mapTypeId: google.maps.MapTypeId.ROADMAP
+                        };
+                        map = new google.maps.Map($("#map").get(0), mapOptions);
+                        // fitBounds acercará el mapa con el zoom adecuado de acuerdo a lo buscado
+                        map.fitBounds(results[0].geometry.viewport);
+                    } else {
+                        // En caso de no haber resultados o que haya ocurrido un error
+                        // lanzamos un mensaje con el error
+                        alert("Geocoding no tuvo éxito debido a: " + status);
+                    }
+                    cargarMarcadores();
+                }
             });
         </script>
 
