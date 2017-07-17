@@ -260,5 +260,13 @@ class Welcome extends CI_Controller {
         $idNegocio = $this->input->post("idNegocio");
         echo json_encode($this->gestionModel->getDatosNegocio($idNegocio));
     }
-
+    
+    public function procesarVenta(){
+        $idNegocio = $this->input->post("idNegocio");
+        echo json_encode($this->gestionModel->procesarVenta($idNegocio));
+    }
+    
+    public function getIdVenta(){
+        echo json_encode($this->gestionModel->getIdVenta('111111115'));
+    }
 }

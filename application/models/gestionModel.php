@@ -233,6 +233,37 @@ class gestionModel extends CI_Model {
         $this->db->where("idNegocio",$idNegocio);
         return $this->db->get()->result();
     }
+    
+    function getIdVenta($rutUsuario){
+        $this->db->select_max("idVenta");
+        $this->db->from("Venta");
+        $this->db->where("rutUsuario",$rutUsuario);
+        return $this->db->get()->result();
+    }
+    
+    function procesarVenta($idNegocio){
+        $Respuesta = "Error desconocido";
+        if ($this->session->userdata("carro")) {
+            $carro = $this->session->userdata("carro");
+            $user = $this->getUsuario();
+            $TotalFinal = 0;
+            for ($i = 0; $i < count($carro); $i++) {
+                $TotalFinal = $TotalFinal + $carro[$i]['Total'];
+            }
+            $datosVenta = array("Total"=>$TotalFinal,"Estado"=>"Pendiente","rutUsuario"=>$user->Rut,"idNegocio"=>$idNegocio);
+            $this->db->insert("Venta",$datosVenta);
+            $idVenta = $this->getIdVenta($user->Rut);
+            for ($i = 0; $i < count($carro); $i++) {
+                $datosDetalle = array("Cantidad"=>$carro[$i]['Cantidad'],"PrecioVenta"=>$carro[$i]['Precio'],"idVenta"=>$idVenta[0]->idVenta,"idProducto"=>$carro[$i]['idProducto']);
+                $this->db->insert("Detalle_Venta",$datosDetalle);
+            }
+            $this->session->unset_userdata("carro");
+            $Respuesta = "Venta exitosa,".$idVenta[0]->idVenta;
+        }else{
+            $Respuesta = "Sin productos en el carro";
+        }
+        return $Respuesta;
+    }
 
 }
 

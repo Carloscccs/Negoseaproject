@@ -83,3 +83,5 @@ $route['vaciarCarro'] = 'welcome/vaciar';
 $route['deleteCarro'] = 'welcome/borrarCarro';
 $route['busProdNegs'] = 'welcome/buscarProductoNegocios';
 $route['getDatNego'] = 'welcome/getDatosNegocio';
+$route['rVenta'] = 'welcome/procesarVenta';
+$route['getIDv'] = 'welcome/getIdVenta';

@@ -83,7 +83,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <input type="button" value="Vaciar carro" id="btnVaciar" class="btn red" />
                         </div>
                         <div class="s5">
-                            <input type="button" value="Comprar" class="btn green" />
+                            <input type="button" value="Comprar" class="btn green" id="btnVenta" />
                         </div>
                     </div>
                 </div>
@@ -338,7 +338,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     $.getJSON(url, function (result){
                        $.each(result, function (i,o){
                            var x = "<tr><td>"+o.idProducto+"</td><td>"+o.Nombre+"</td><td>"+o.Cantidad+"</td><td>"+o.Precio+"</td><td>"+o.Total+"</td><td><button id='delete' value='"+o.idProducto+"' class='btn-ﬂoating btn-large waves-effect waves-light red'><i class='material-icons'>delete</i></button>";
-                           subtotal = (o.Total) + subtotal;
                            $("#tbodyCarrito").append(x);
                        });
                     });
@@ -453,8 +452,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     });
                 });
                 
+                $("#btnVenta").click(function(){
+                    var idNegocio = $("#idNegocioOculto").val();
+                    $.ajax({
+                        url: "<?php echo site_url();?>/rVenta",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {"idNegocio":idNegocio}
+                    }).success(function (obj){
+                        var res = obj;
+                        var fila = res.split(",");
+                        alert(fila[0]);
+                        alert("Se ha generado asociado al ID:"+fila[1]+", anote este numero ya que con el prodra retirar sus productos");
+                        window.location = "<?php echo site_url();?>/musu";
+                    });
+                });
                 
-
             });
         </script>
 
