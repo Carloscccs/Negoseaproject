@@ -59,7 +59,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             </div>
                             <div class="row">
                                 <div class="input-field col s4">
-                                    <input id="txtrutDueño" type="text" class="validate">
+                                    <input id="txtrutDueño" type="text" maxlength="9" class="validate">
                                     <label for="txtrutDueño">Rut dueño</label>
                                 </div>
                                 <div class="input-field col s4">
@@ -405,6 +405,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             Materialize.toast("" + obj);
                             $("#tbodynegocios").empty();
                             cargarNegocios();
+                            $("#txtNombre").val("");
+                            $("#txtHorario").val("");
+                            $("#selectTipo").val("");
+                            $("#txtLatitud").val("");
+                            $("#txtLongitud").val("");
+                            $("#txtrutDueño").val("");
                         });
                     }
                 });
@@ -455,6 +461,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     $("#txtMNlatitud").val(fila[3]);
                     $("#txtMNlongitud").val(fila[4]);
                     $("#txtMNhorario").val(fila[6]);
+                    $("#selectMNTipo").val(fila[5])
                     $("#modalActualizarNeg").modal('open');
                 });
 
@@ -502,7 +509,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     $.ajax({
                         url: "<?php echo site_url(); ?>/cSesion"
                     }).success(function (obj) {
-
+                        window.location = "<?php echo base_url(); ?>";
                     });
                 });
 
@@ -546,6 +553,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             $("#modalEliminar").modal("close");
                             $("#tbodyusuarios").empty();
                             cargarUsuarios();
+                            $("#modalEliminarNegocio").modal('close');
                         }).fail(function (jqXHR, textStatus, errorThrown) {
                             if (jqXHR.status === 0) {
                                 alert('Not connect: Verify Network.');

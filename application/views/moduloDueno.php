@@ -93,7 +93,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             </div>
 
                         </div>
-                        <h3>Negocios existentes</h3>
+                        <h3>Productos existentes</h3>
                         <div class="row">
                             <div class="col s4">
                                 <div class="input-field col s12">
@@ -115,7 +115,30 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </div>
 
                 </div>
-                <div id="test2" class="col s12"><h4>Reportes pendientes</h4></div>
+                <div id="test2" class="col s12">
+                    <div class="row">
+                        <div class="input-field col s4">
+                            <input id="txtBuscarVenta" type="number" class="validate">
+                            <label for="txtBuscarVenta">Id venta</label>
+                        </div>
+                        <div class="col s3">
+                            <br>
+                            <input type="button" id="btnBuscarVenta" value="Buscar" class="btn" />
+                        </div>
+                        <div class="col s4">
+                            <br>
+                            <a href="#modalProductosVendidos" class="btn orange">Ver productos vendidos</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <table>
+                                <thead><th>ID</th><th>Usuario</th><th>Total</th><th>Detalle</th><th>Estado</th><th>Modificar</th></thead>
+                                <tbody id="tbodyVentas"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -127,6 +150,57 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <div class="modal-footer">
                 <input type="button" value="Si" id="bteliminarProdSi" class="btn green"/>
                 <input type="button" value="No" id="bteliminarProdNo" class="btn yellow modal-action modal-close"/>
+            </div>
+        </div>
+
+        <div id="modalVerDetalle" class="modal">
+            <div class="modal-content">
+                <table>
+                    <thead><th>Nombre</th><th>Cantidad</th></thead>
+                    <tbody id="tbodyDetalleVenta"></tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="OK"class="btn yellow modal-action modal-close"/>
+            </div>
+        </div>
+
+        <div id="modalProductosVendidos" class="modal">
+            <div class="modal-content">
+                <table>
+                    <thead><th>Nombre</th><th>Cantidad</th></thead>
+                    <tbody id="tbodyProductosVendidos"></tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="OK"class="btn yellow modal-action modal-close"/>
+            </div>
+        </div>
+
+        <div id="modalCambiarEstadoVenta" class="modal">
+            <div class="modal-content">
+                <table>
+                    <thead><th>ID</th><th>Estado</th><th>Accion</th></thead>
+                    <tbody id="tbodyEstadoVenta">
+                    <td><h6 id="hVenta"></h6></td>
+                    <td>
+                        <div>
+                            <label>Estado</label>
+                            <select id="selectEstadoVenta" class="browser-default">
+                                <option value="Pendiente" >Pendiente</option>
+                                <option value="Entregado" >Entregado</option>
+                                <option value="Abandonado" >Abandonado</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="button" id="btnCambiarEstadoVenta" value="Cambiar" class="btn yellow" />
+                    </td>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="Cancelar"class="btn red modal-action modal-close"/>
             </div>
         </div>
 
@@ -227,6 +301,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 cargarSesion();
                 cargarProductos();
                 cargarID();
+                cargarVentas();
+                cargarProductosVendidos();
                 function cargarSesion() {
                     var url = "<?php echo site_url(); ?>/getUs";
                     $("#NombreUsuario").empty();
@@ -249,6 +325,68 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         $("#idNegocio").val(obj);
                     });
                 }
+
+                function cargarVentas() {
+                    var url = "<?php echo site_url(); ?>/getVN";
+                    $("#tbodyVentas").empty();
+                    $.getJSON(url, function (res) {
+                        $.each(res, function (i, o) {
+                            var x = "<tr><td>" + o.idVenta + "</td><td>" + o.rutUsuario + "</td><td>" + o.Total + "</td><td><button id='detalle' value='" + o.idVenta + "' class='btn-ﬂoating btn-large waves-effect waves-light blue'>Ver</button></td><td>" + o.Estado + "</td><td><button id='estado' value='" + o.idVenta + "," + o.Estado + "' class='btn-ﬂoating btn-large waves-effect waves-light yellow'><i class='material-icons'>settings</i></button></td></tr>";
+                            $("#tbodyVentas").append(x);
+                        });
+                    });
+                }
+                
+                function cargarProductosVendidos() {
+                    var url = "<?php echo site_url(); ?>/getPV";
+                    $("#tbodyProductosVendidos").empty();
+                    $.getJSON(url, function (res) {
+                        $.each(res, function (i, o) {
+                            var x = "<tr><td>"+o.Nombre+"</td><td>"+o.Cantidad+"</td></tr>";
+                            $("#tbodyProductosVendidos").append(x);
+                        });
+                    });
+                }
+
+                $("#tbodyVentas").on("click", "#detalle", function (e) {
+                    var idVenta = $(this).val();
+                    $("#tbodyDetalleVenta").empty();
+                    $.ajax({
+                        url: "<?php echo site_url(); ?>/getDV",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {"idVenta": idVenta}
+                    }).success(function (obj) {
+                        $.each(obj, function (i, o) {
+                            var x = "<tr><td>" + o.Nombre + "</td><td>" + o.Cantidad + "</td><tr>";
+                            $("#tbodyDetalleVenta").append(x);
+                        });
+                        $("#modalVerDetalle").modal('open');
+                    });
+                });
+
+                $("#tbodyVentas").on("click", "#estado", function (e) {
+                    var datos = $(this).val();
+                    var fila = datos.split(",");
+                    $("#hVenta").text(fila[0]);
+                    $("#selectEstadoVenta").val(fila[1]);
+                    $("#modalCambiarEstadoVenta").modal('open');
+                });
+
+                $("#btnCambiarEstadoVenta").click(function () {
+                    var idVenta = $("#hVenta").text();
+                    var Estado = $("#selectEstadoVenta").val();
+                    $.ajax({
+                        url: "<?php echo site_url(); ?>/setEV",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {"idVenta": idVenta, "Estado": Estado}
+                    }).success(function (obj) {
+                        Materialize.toast(obj, 3000);
+                        cargarVentas();
+                        $("#modalCambiarEstadoVenta").modal('close');
+                    });
+                });
 
                 $("#btnAgregarProducto").click(function () {
                     var nombre = $("#txtNombre").val();
@@ -273,9 +411,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 });
 
                 function cargarProductos() {
-                    var url = "<?php echo site_url();?>/getProduNego";
+                    var url = "<?php echo site_url(); ?>/getProduNego";
                     $("#tbodyProductos").empty();
-                    $.getJSON(url, function (res){
+                    $.getJSON(url, function (res) {
                         $.each(res, function (i, o) {
                             var x = "<tr><td><img src'" + o.rutaImg + "' /></td>";
                             x += "<td>" + o.Nombre + "</td>";

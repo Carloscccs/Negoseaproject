@@ -119,7 +119,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="row">
                     <div class="col s12">
                         <label class="active" for="Clave">CLAVE</label>
-                        <input id="Clave" type="text" class="validate">
+                        <input id="Clave" type="password" class="validate">
                     </div>
                 </div>
                 <div class="row">
@@ -154,7 +154,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </div>
                 </div>
                 <div class="row">
-                    <input id="btnActualizarDatos" type="button" class="waves-effect waves-light btn" value="Registro" />
+                    <input id="btnActualizarDatos" type="button" class="waves-effect waves-light btn" value="Actualizar" />
                 </div>
             </div>
         </div>

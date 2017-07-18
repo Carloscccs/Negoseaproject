@@ -110,9 +110,9 @@ class gestionModel extends CI_Model {
     
     function eliminarUsuario($Rut){
         $this->db->where("Rut",$Rut);
-        $datos = array("Rol"=>'Eliminado');
+        $this->db->set("Rol","Eliminado");
         $respuesta = "Error inesperado";
-        if($this->db->update("Usuario",$datos)){
+        if($this->db->update("Usuario")){
             $respuesta = "Usuario eliminado";
         }else{
             $respuesta = "Error al eliminar usuario";
@@ -263,6 +263,47 @@ class gestionModel extends CI_Model {
             $Respuesta = "Sin productos en el carro";
         }
         return $Respuesta;
+    }
+    
+    function getVentasNegocio(){
+        $user = $this->getUsuario();
+        $idNegocio = $this->getIdNegocio($user->Rut);
+        $this->db->select("*");
+        $this->db->from("Venta");
+        $this->db->where("idNegocio",$idNegocio);
+        return $this->db->get()->result();
+    }
+    
+    function getDetalleVenta($idVenta){
+        $this->db->select("p.Nombre,v.Cantidad");
+        $this->db->from("Detalle_Venta v");
+        $this->db->join("Producto p","v.idProducto = p.idProducto");
+        $this->db->where("v.idVenta",$idVenta);
+        return $this->db->get()->result();
+    }
+    
+    function cambiarEstadoVenta($idVenta,$Estado){
+        $this->db->set("Estado",$Estado);
+        $this->db->where("idVenta",$idVenta);
+        $Respuesta = "Error Desconocido";
+        if($this->db->update("Venta")){
+            $Respuesta = "Estado cambiado";
+        }else{
+            $Respuesta = "Error al cambiar estado";
+        }
+        return $Respuesta;
+    }
+    
+    function getProductosVendidos(){
+        $user = $this->getUsuario();
+        $idNegocio = $this->getIdNegocio($user->Rut);
+        $this->db->select("p.Nombre,sum(dv.Cantidad) as Cantidad");
+        $this->db->from("Detalle_Venta dv");
+        $this->db->join("Producto p","dv.idProducto = p.idProducto");
+        $this->db->join("Venta v","dv.idVenta = v.idVenta");
+        $this->db->where("v.idNegocio",$idNegocio);
+        $this->db->group_by("dv.idProducto");
+        return $this->db->get()->result();
     }
 
 }

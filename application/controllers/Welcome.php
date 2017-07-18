@@ -111,7 +111,7 @@ class Welcome extends CI_Controller {
     }
 
     public function eliminarUsuario() {
-        $Rut = $this->input->post("idNegocio");
+        $Rut = $this->input->post("Rut");
         echo json_encode($this->gestionModel->eliminarUsuario($Rut));
     }
 
@@ -268,5 +268,24 @@ class Welcome extends CI_Controller {
     
     public function getIdVenta(){
         echo json_encode($this->gestionModel->getIdVenta('111111115'));
+    }
+    
+    public function getVentasNegocio(){
+        echo json_encode($this->gestionModel->getVentasNegocio());
+    }
+    
+    public function getDetalleVenta(){
+        $idVenta = $this->input->post("idVenta");
+        echo json_encode($this->gestionModel->getDetalleVenta($idVenta));
+    }
+    
+    public function cambiarEstadoVenta(){
+        $idVenta = $this->input->post("idVenta");
+        $Estado = $this->input->post("Estado");
+        echo json_encode($this->gestionModel->cambiarEstadoVenta($idVenta,$Estado));
+    }
+    
+    public function getProductosVendidos(){
+        echo json_encode($this->gestionModel->getProductosVendidos());
     }
 }

@@ -463,7 +463,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         var res = obj;
                         var fila = res.split(",");
                         alert(fila[0]);
-                        alert("Se ha generado asociado al ID:"+fila[1]+", anote este numero ya que con el prodra retirar sus productos");
+                        alert("Se ha generado una venta asociada al ID:"+fila[1]+", anote este numero ya que con el prodra retirar sus productos");
                         window.location = "<?php echo site_url();?>/musu";
                     });
                 });

@@ -85,3 +85,7 @@ $route['busProdNegs'] = 'welcome/buscarProductoNegocios';
 $route['getDatNego'] = 'welcome/getDatosNegocio';
 $route['rVenta'] = 'welcome/procesarVenta';
 $route['getIDv'] = 'welcome/getIdVenta';
+$route['getVN'] = 'welcome/getVentasNegocio';
+$route['getDV'] = 'welcome/getDetalleVenta';
+$route['setEV'] = 'welcome/cambiarEstadoVenta';
+$route['getPV'] = 'welcome/getProductosVendidos';
